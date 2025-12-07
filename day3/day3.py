@@ -23,3 +23,31 @@ def part1():
     return answer
 
 print(f"Part 1: {part1()}")
+
+def part2():
+    # struggled on this one, ended up looking for hints at the reddit and started reading about a monotonic stack
+    # https://www.geeksforgeeks.org/dsa/introduction-to-monotonic-stack-2/
+    answer = 0
+
+    for bank in data:
+        # go backwards, to always swap in the highest numbers on the left
+        start_ix = len(bank) - 12
+        og_bank = [int(c) for c in bank]
+        stack = og_bank[start_ix:]
+
+        # now compare every element in the stack to further up the bank to see if any swaps should be made
+        # we don't want to look further ahead than where the last swap happened
+        last_swap_bank_ix = -1
+        for i in range(len(stack)):
+            end_ix = last_swap_bank_ix
+            for j in range(start_ix + i, end_ix, -1):
+                if og_bank[j] >= stack[i]: 
+                    stack[i] = og_bank[j]
+                    last_swap_bank_ix = j
+
+        joltage = ''.join([str(digit) for digit in stack])
+        answer += int(joltage)
+    
+    return answer
+
+print(f"Part 2: {part2()}")
